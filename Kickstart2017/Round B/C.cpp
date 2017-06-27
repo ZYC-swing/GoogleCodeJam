@@ -21,10 +21,50 @@ typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 typedef vector<vector<int>> vvi;
 
+// return {gcd(a, b), x, y}, where a * x + b * y == gcd(a, b)
+vector<int> extendGcd(int a, int b) {
+    if (b == 0) {
+        return {a, 1, 0};
+    } else {
+        vector<int> tmp = extendGcd(b, a % b);
+        return {tmp[0], tmp[2], tmp[1] - (a / b) * tmp[2]};
+    }
+}
+
+ll moMul(ll a, ll b) {
+    return ((a % mod) * (b % mod)) % mod;
+}
+
+ll myPow(ll base, int exp) {
+    ll res = 1;
+    while (exp) {
+        if (exp & 1) {
+            res *= base;
+            res %= mod;
+        }
+        base = base * base % mod;
+        exp >>= 1;
+    }
+    return res;
+}
+
 int m, n;
 map<vector<int>, int> helper;
 int dp[101][101];
 char matrix[101][101];
+
+int dfs(int x, int y, int remain) {
+    if (remain == 0) return 0;
+    if (m - x < remain || x >= m || y < 0 || y >= n || matrix[x][y] == '.') return INT_MIN;
+    if (helper.find({x, y, remain}) != helper.end()) return helper[{x, y, remain}];
+    int res = 0;
+    for (int h = 1; h <= dp[x][y]; ++h) {
+        for (int col = y - h + 1; col <= y + h - 1; ++col) {
+            res = max(res, h * h + dfs(x + h, col, remain - 1));
+        }
+    }
+    return helper[{x, y, remain}] = (res == 0 ? INT_MIN : res);
+}
 
 int main() {
     int t;
@@ -52,28 +92,9 @@ int main() {
         }
 
         int res = 0;
-        vector<vector<vector<int>>> tmp(m, vector<vector<int>>(n, vector<int>(k + 1, 0)));
-        for (int row = m - 1; row >= 0; --row) {
+        for (int row = 0; row <= m - k; ++row) {
             for (int col = 0; col < n; ++col) {
-                if (matrix[row][col] == '#') {
-                    for (int cnt = 1; cnt <= k; ++cnt) {
-                        for (int h = 1; h <= dp[row][col]; ++h) {
-                            if (row + h == m) {
-                                if (cnt > 1) break;
-                                tmp[row][col][cnt] = max(tmp[row][col][cnt], h * h);
-                            } else {
-                                for (int index = col - h + 1; index <= col + h - 1; ++index) {
-                                    if (cnt == 1 || tmp[row + h][index][cnt - 1]) {
-                                        tmp[row][col][cnt] = max(tmp[row][col][cnt], h * h + tmp[row + h][index][cnt - 1]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (tmp[row][col][k]) {
-                        res = max(res, tmp[row][col][k]);
-                    }
-                }
+                res = max(res, dfs(row, col, k));
             }
         }
 

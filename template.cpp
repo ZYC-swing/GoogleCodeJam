@@ -14,6 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <list>
+#include <random>
+#include <functional>
 #include <climits>
 #include <cstdio>
 #include <ctype.h>
@@ -24,6 +26,7 @@ using namespace std;
 #define EPS 1e-8
 #define MOD 1000000007
 #define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
 #define pb push_back
 #define fi first
 #define se second
@@ -42,6 +45,14 @@ template <class L, class R> ostream &operator <<(ostream &os, pair<L, R> P){
 template <class T> ostream &operator <<(ostream &os, vector<T> V){
     os << "["; for (auto vv: V) os << vv << ","; return os << "]";
 }
+template <class L, class R> ostream &operator <<(ostream &os, map<L, R> M){
+    os << "["; for (auto pr: M) os << pr.fi << "->" << pr.se << ","; return os << "]";
+}
+template <class L, class R> ostream &operator <<(ostream &os, unordered_map<L, R> M){
+    os << "["; for (auto pr: M) os << pr.fi << "->" << pr.se << ","; return os << "]";
+}
+
+mt19937_64 mt(time(0));
 
 struct Matrix {
     vvi data;
@@ -68,17 +79,15 @@ struct Matrix {
     }
 };
 
-// 扩展欧几里得算法 res[1] * a + res[2] * b = res[0] = gcd(a, b)
 vector<int> extendGcd(int a, int b) {
     if (b == 0) {
-        return {a, 1, 0};
+        return {1, 0, a};
     } else {
         vector<int> tmp = extendGcd(b, a % b);
-        return {tmp[0], tmp[2], tmp[1] - (a / b) * tmp[2]};
+        return {tmp[1], tmp[0] - (a / b) * tmp[1], tmp[2]};
     }
 }
 
-// 矩阵快速幂
 Matrix matrix_power(Matrix base, ll exp) {
     int n = base.r;
     Matrix res(n, n, true);
@@ -94,18 +103,26 @@ Matrix matrix_power(Matrix base, ll exp) {
 
 /******************************** template ********************************/
 
+void solve() {
+
+}
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 #ifdef ZYC_LOCAL
-    freopen("A-large-practice.in", "r", stdin);
-    freopen("A-large-practice.out", "w", stdout);
+    freopen("in", "r", stdin);
+    freopen("out", "w", stdout);
 #endif
+    int T;
+    cin >> T;
+    go(t, 1, T) {
+        cout << "Case #" << t << ": ";
+        solve();
+        cout << endl;
+        fprintf(stderr, ">> %d/%d case(s) solved in %lf s.\r", t, T, 1.0 * clock() / CLOCKS_PER_SEC);
+    }
 
-#ifdef ZYC_LOCAL
-    cerr << "Time elapsed: " << 1.0 * clock() / CLOCKS_PER_SEC << " s.\n";
-#endif
     return 0;
 }

@@ -1,0 +1,5 @@
+main.cpp
+save.sh
+.idea/
+CMakeLists.txt
+cmake-build-debug/

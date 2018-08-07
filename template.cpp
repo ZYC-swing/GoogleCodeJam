@@ -1,25 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <stack>
-#include <algorithm>
-#include <cmath>
-#include <string>
-#include <cstring>
-#include <map>
-#include <set>
-#include <bitset>
-#include <sstream>
-#include <cstdlib>
-#include <unordered_map>
-#include <unordered_set>
-#include <list>
-#include <random>
-#include <functional>
-#include <climits>
-#include <cstdio>
-#include <ctype.h>
-#include <time.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 #define PI acos(-1.0)
